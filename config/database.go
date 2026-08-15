@@ -12,7 +12,7 @@ func ConnectDatabase() (*sql.DB, error) {
 	dsn := os.Getenv("DATABASE_URL")
 
 	if dsn == "" {
-		dsn = "postgres://postgres:1234567890@localhost:5432/bioskop_db"
+		return nil, fmt.Errorf("DATABASE_URL belum diset")
 	}
 
 	db, err := sql.Open("pgx", dsn)
