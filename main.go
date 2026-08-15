@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 
 	"github.com/gin-gonic/gin"
 
@@ -11,7 +12,6 @@ import (
 )
 
 func main() {
-	// Koneksi database
 	db, err := config.ConnectDatabase()
 
 	if err != nil {
@@ -20,19 +20,22 @@ func main() {
 
 	defer db.Close()
 
-	println("Database berhasil terhubung")
+	log.Println("Database berhasil terhubung")
 
-	// Membuat Gin
 	router := gin.Default()
 
-	// Membuat handler bioskop
 	bioskopHandler := handlers.NewBioskopHandler(db)
 
-	// Setup routes
 	routes.SetupRoutes(router, bioskopHandler)
 
-	// Menjalankan server
-	err = router.Run(":8080")
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	log.Println("Server berjalan di port:", port)
+
+	err = router.Run(":" + port)
 
 	if err != nil {
 		log.Fatal("Gagal menjalankan server:", err)
